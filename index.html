@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,62 +7,69 @@
     <title>UniChat</title>
 
     <style>
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        body{
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            height:100vh;
-            background:#0f172a;
-            color:#ffffff;
-            font-family:Arial, sans-serif;
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #0f172a;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
         }
 
-        h1{
-            font-size:38px;
-            letter-spacing:1px;
+        h1 {
+            font-size: 38px;
+            letter-spacing: 1px;
         }
     </style>
 </head>
+
 <body>
 
     <h1>UniChat</h1>
 
-    <script>
-        // Redirect to Login Page after 2 seconds
-        setTimeout(function () {
-            window.location.href = "login.html";
-        }, 2000);
-    </script>
     <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
+        import { initializeApp }
+        from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB1oI_mH7dKlSX2M1wynE_dDTT7TLFbVc4",
-  authDomain: "unichat-5b96d.firebaseapp.com",
-  databaseURL: "https://unichat-5b96d-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "unichat-5b96d",
-  storageBucket: "unichat-5b96d.firebasestorage.app",
-  messagingSenderId: "37433406956",
-  appId: "1:37433406956:web:bd83559ebbd6d927e8bcc9",
-  measurementId: "G-36CLRFLKXN"
-};
+        import { getAnalytics, isSupported }
+        from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
 
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1oI_mH7dKlSX2M1wynE_dDTT7TLFbVc4",
+            authDomain: "unichat-5b96d.firebaseapp.com",
+            databaseURL: "https://unichat-5b96d-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "unichat-5b96d",
+            storageBucket: "unichat-5b96d.firebasestorage.app",
+            messagingSenderId: "37433406956",
+            appId: "1:37433406956:web:bd83559ebbd6d927e8bcc9",
+            measurementId: "G-36CLRFLKXN"
+        };
 
-console.log("Firebase Connected Successfully");
+        try {
+            const app = initializeApp(firebaseConfig);
 
-// Splash screen redirect
-setTimeout(() => {
-  window.location.href = "login.html";
-}, 2000);
+            console.log("Firebase Initialized Successfully");
+
+            if (await isSupported()) {
+                getAnalytics(app);
+                console.log("Firebase Analytics Initialized");
+            }
+
+        } catch (error) {
+            console.error("Firebase Error:", error);
+        }
+
+        // Redirect after 2 seconds
+        setTimeout(() => {
+            window.location.replace("login.html");
+        }, 2000);
     </script>
 
 </body>
