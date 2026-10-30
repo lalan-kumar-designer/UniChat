@@ -1,24 +1,32 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#020617">
+
     <title>UniChat - Home</title>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif']
+                    },
                     colors: {
                         unichat: {
-                            bg: '#020617', // Slate 950
+                            bg: '#020617',
                             card: 'rgba(30, 41, 59, 0.4)',
                             border: 'rgba(255, 255, 255, 0.08)',
                             primary: '#3b82f6',
@@ -27,49 +35,56 @@
                     }
                 }
             }
-        }
+        };
     </script>
-    
+
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            background: radial-gradient(circle at top right, #1e1b4b 0%, #020617 40%, #0f172a 100%);
+            background: radial-gradient(
+                circle at top right,
+                #1e1b4b 0%,
+                #020617 40%,
+                #0f172a 100%
+            );
             background-attachment: fixed;
             color: #f8fafc;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Glassmorphism Utilities */
         .glass {
             background: rgba(15, 23, 42, 0.65);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255,255,255,0.08);
         }
 
         .glass-nav {
-            background: rgba(2, 6, 23, 0.85);
+            background: rgba(2,6,23,0.90);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* Hide Scrollbars but keep functionality */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
         .no-scrollbar {
-            -ms-overflow-style: none;
             scrollbar-width: none;
+            -ms-overflow-style: none;
         }
 
-        /* Animations */
         .fade-in {
             animation: fadeIn 0.4s ease-out forwards;
         }
-        
+
         .slide-up {
-            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
             opacity: 0;
             transform: translateY(20px);
         }
@@ -80,362 +95,1061 @@
         }
 
         @keyframes slideUp {
-            to { opacity: 1; transform: translateY(0); }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* Shimmer Loading Effect */
         .shimmer {
-            background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
+            background: linear-gradient(
+                90deg,
+                rgba(255,255,255,0.03) 25%,
+                rgba(255,255,255,0.08) 50%,
+                rgba(255,255,255,0.03) 75%
+            );
             background-size: 200% 100%;
             animation: shimmerEffect 1.5s infinite;
         }
+
         @keyframes shimmerEffect {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
 
-        /* Toast */
         .toast {
-            animation: toastSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation: toastSlideIn 0.3s ease forwards;
         }
+
         @keyframes toastSlideIn {
-            from { transform: translateY(-100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .hidden-view {
+            display: none !important;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
+
 <body class="min-h-screen relative overflow-x-hidden selection:bg-blue-500/30">
 
-    <!-- Toast Container -->
-    <div id="toast-container" class="fixed top-20 left-0 right-0 z-50 flex flex-col items-center gap-2 pointer-events-none px-4"></div>
+    <!-- Toast -->
+    <div
+        id="toast-container"
+        class="fixed top-20 left-0 right-0 z-[100] flex flex-col items-center gap-2 pointer-events-none px-4"
+        aria-live="polite"
+        aria-atomic="true">
+    </div>
 
     <!-- Top App Bar -->
     <header class="fixed top-0 w-full glass z-40 px-4 py-3 sm:px-6">
+
         <div class="max-w-3xl mx-auto flex justify-between items-center">
+
             <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
                     <i class="ph ph-chats-teardrop text-white text-lg"></i>
                 </div>
-                <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">UniChat</h1>
+
+                <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+                    UniChat
+                </h1>
+
             </div>
-            <div class="flex items-center gap-3 sm:gap-4">
-                <button onclick="navigate('search.html')" class="p-2 rounded-full hover:bg-white/10 transition-colors">
+
+            <div class="flex items-center gap-3">
+
+                <button
+                    type="button"
+                    onclick="navigate('search.html')"
+                    aria-label="Search"
+                    class="p-2 rounded-full hover:bg-white/10">
                     <i class="ph ph-magnifying-glass text-xl text-gray-300"></i>
                 </button>
-                <button onclick="navigate('notifications.html')" class="p-2 rounded-full hover:bg-white/10 transition-colors relative">
+
+                <button
+                    type="button"
+                    onclick="navigate('notifications.html')"
+                    aria-label="Notifications"
+                    class="p-2 rounded-full hover:bg-white/10 relative">
+
                     <i class="ph ph-bell text-xl text-gray-300"></i>
-                    <span id="notif-badge" class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full shadow-[0_0_8px_rgba(239,68,68,0.8)] hidden"></span>
+
+                    <span
+                        id="notif-badge"
+                        class="hidden absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full">
+                    </span>
+
                 </button>
-                <button onclick="showMenu()" class="p-2 rounded-full hover:bg-white/10 transition-colors">
+
+                <button
+                    type="button"
+                    onclick="showMenu()"
+                    aria-label="Open menu"
+                    aria-expanded="false"
+                    id="menu-button"
+                    class="p-2 rounded-full hover:bg-white/10">
+
                     <i class="ph ph-dots-three-vertical text-xl text-gray-300"></i>
+
                 </button>
+
             </div>
+
         </div>
+
+        <!-- Dropdown Menu -->
+        <div
+            id="menu-panel"
+            class="hidden-view absolute right-4 top-16 w-48 glass rounded-xl p-2 shadow-xl">
+
+            <button
+                type="button"
+                onclick="navigate('profile.html')"
+                class="w-full text-left p-3 rounded-lg hover:bg-white/10 text-sm">
+
+                <i class="ph ph-user mr-2"></i>
+                My Profile
+
+            </button>
+
+            <button
+                type="button"
+                onclick="logout()"
+                id="logout-menu-button"
+                class="w-full text-left p-3 rounded-lg hover:bg-red-500/10 text-red-400 text-sm">
+
+                <i class="ph ph-sign-out mr-2"></i>
+                Logout
+
+            </button>
+
+        </div>
+
     </header>
 
     <!-- Main Content -->
     <main class="pt-20 pb-24 px-4 sm:px-6 max-w-3xl mx-auto min-h-screen">
-        
+
         <!-- Welcome Section -->
-        <section class="py-4 flex items-center justify-between slide-up" style="animation-delay: 0.1s;">
+        <section class="py-4 flex items-center justify-between slide-up">
+
             <div class="flex items-center gap-4">
-                <div class="relative cursor-pointer" onclick="navigate('profile.html')">
-                    <div id="profile-photo-container" class="w-14 h-14 rounded-full border-2 border-blue-500 p-0.5 overflow-hidden">
-                        <div id="profile-photo-shimmer" class="w-full h-full rounded-full shimmer"></div>
-                        <img id="profile-photo" src="" alt="Profile" class="w-full h-full rounded-full object-cover hidden">
+
+                <div
+                    class="relative cursor-pointer"
+                    onclick="navigate('profile.html')">
+
+                    <div class="w-14 h-14 rounded-full border-2 border-blue-500 p-0.5 overflow-hidden">
+
+                        <div
+                            id="profile-photo-shimmer"
+                            class="w-full h-full rounded-full shimmer">
+                        </div>
+
+                        <img
+                            id="profile-photo"
+                            src=""
+                            alt="Profile photo"
+                            class="w-full h-full rounded-full object-cover hidden">
+
                     </div>
+
                     <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-[#020617] rounded-full"></div>
+
                 </div>
+
                 <div>
-                    <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Welcome back</p>
-                    <h2 id="profile-name" class="text-lg font-semibold text-white leading-tight mt-0.5">
-                        <div class="w-32 h-5 rounded shimmer"></div>
-                    </h2>
-                    <p id="profile-username" class="text-sm text-blue-400">
-                        <div class="w-20 h-4 rounded shimmer mt-1"></div>
+
+                    <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">
+                        Welcome back
                     </p>
+
+                    <h2
+                        id="profile-name"
+                        class="text-lg font-semibold text-white leading-tight mt-0.5">
+                        Loading...
+                    </h2>
+
+                    <p
+                        id="profile-username"
+                        class="text-sm text-blue-400">
+                    </p>
+
                 </div>
+
             </div>
+
         </section>
 
         <!-- Quick Actions -->
-        <section class="py-4 slide-up" style="animation-delay: 0.2s;">
-            <div class="flex gap-4 overflow-x-auto no-scrollbar pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
-                <button onclick="navigate('chat.html')" class="flex flex-col items-center gap-2 min-w-[72px] group">
-                    <div class="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all transform group-active:scale-95">
+        <section class="py-4 slide-up">
+
+            <div class="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+
+                <button onclick="navigate('chat.html')"
+                    class="flex flex-col items-center gap-2 min-w-[72px]">
+
+                    <div class="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
                         <i class="ph ph-plus text-2xl"></i>
                     </div>
-                    <span class="text-xs text-gray-400 font-medium">New Chat</span>
+
+                    <span class="text-xs text-gray-400">New Chat</span>
+
                 </button>
-                <button onclick="navigate('groups.html')" class="flex flex-col items-center gap-2 min-w-[72px] group">
-                    <div class="w-14 h-14 rounded-2xl glass flex items-center justify-center text-gray-300 group-hover:bg-white/10 transition-all transform group-active:scale-95">
+
+                <button onclick="navigate('groups.html')"
+                    class="flex flex-col items-center gap-2 min-w-[72px]">
+
+                    <div class="w-14 h-14 rounded-2xl glass flex items-center justify-center text-gray-300">
                         <i class="ph ph-users-three text-2xl"></i>
                     </div>
-                    <span class="text-xs text-gray-400 font-medium">Group</span>
+
+                    <span class="text-xs text-gray-400">Group</span>
+
                 </button>
-                <button onclick="showToast('Communities coming soon!')" class="flex flex-col items-center gap-2 min-w-[72px] group">
-                    <div class="w-14 h-14 rounded-2xl glass flex items-center justify-center text-gray-300 group-hover:bg-white/10 transition-all transform group-active:scale-95">
+
+                <button onclick="showToast('Communities coming soon!')"
+                    class="flex flex-col items-center gap-2 min-w-[72px]">
+
+                    <div class="w-14 h-14 rounded-2xl glass flex items-center justify-center text-gray-300">
                         <i class="ph ph-graduation-cap text-2xl"></i>
                     </div>
-                    <span class="text-xs text-gray-400 font-medium">Study</span>
+
+                    <span class="text-xs text-gray-400">Study</span>
+
                 </button>
-                <button onclick="showToast('Notes sharing coming soon!')" class="flex flex-col items-center gap-2 min-w-[72px] group">
-                    <div class="w-14 h-14 rounded-2xl glass flex items-center justify-center text-gray-300 group-hover:bg-white/10 transition-all transform group-active:scale-95">
+
+                <button onclick="showToast('Notes sharing coming soon!')"
+                    class="flex flex-col items-center gap-2 min-w-[72px]">
+
+                    <div class="w-14 h-14 rounded-2xl glass flex items-center justify-center text-gray-300">
                         <i class="ph ph-files text-2xl"></i>
                     </div>
-                    <span class="text-xs text-gray-400 font-medium">Notes</span>
+
+                    <span class="text-xs text-gray-400">Notes</span>
+
                 </button>
-                <button onclick="navigate('profile.html')" class="flex flex-col items-center gap-2 min-w-[72px] group">
-                    <div class="w-14 h-14 rounded-2xl glass flex items-center justify-center text-gray-300 group-hover:bg-white/10 transition-all transform group-active:scale-95">
+
+                <button onclick="navigate('profile.html')"
+                    class="flex flex-col items-center gap-2 min-w-[72px]">
+
+                    <div class="w-14 h-14 rounded-2xl glass flex items-center justify-center text-gray-300">
                         <i class="ph ph-user text-2xl"></i>
                     </div>
-                    <span class="text-xs text-gray-400 font-medium">Profile</span>
+
+                    <span class="text-xs text-gray-400">Profile</span>
+
                 </button>
+
             </div>
+
         </section>
 
         <!-- Chat Categories -->
-        <section class="py-2 slide-up" style="animation-delay: 0.3s;">
-            <div class="flex gap-2 overflow-x-auto no-scrollbar pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
-                <button class="px-5 py-2 rounded-full bg-blue-600 text-white text-sm font-medium whitespace-nowrap">All Chats</button>
-                <button class="px-5 py-2 rounded-full glass hover:bg-white/10 text-gray-300 text-sm font-medium whitespace-nowrap transition-colors">Personal</button>
-                <button class="px-5 py-2 rounded-full glass hover:bg-white/10 text-gray-300 text-sm font-medium whitespace-nowrap transition-colors">Groups</button>
-                <button class="px-5 py-2 rounded-full glass hover:bg-white/10 text-gray-300 text-sm font-medium whitespace-nowrap transition-colors">Favourites</button>
+        <section class="py-2">
+
+            <div class="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+
+                <button data-filter="all"
+                    class="category-btn px-5 py-2 rounded-full bg-blue-600 text-white text-sm whitespace-nowrap">
+                    All Chats
+                </button>
+
+                <button data-filter="personal"
+                    class="category-btn px-5 py-2 rounded-full glass text-gray-300 text-sm whitespace-nowrap">
+                    Personal
+                </button>
+
+                <button data-filter="group"
+                    class="category-btn px-5 py-2 rounded-full glass text-gray-300 text-sm whitespace-nowrap">
+                    Groups
+                </button>
+
+                <button data-filter="favourite"
+                    class="category-btn px-5 py-2 rounded-full glass text-gray-300 text-sm whitespace-nowrap">
+                    Favourites
+                </button>
+
             </div>
+
         </section>
 
-        <!-- Recent Activity (Chats List) -->
-        <section class="py-4 slide-up" style="animation-delay: 0.4s;">
-            <div id="chats-container" class="flex flex-col gap-2">
-                <!-- Skeleton Loading -->
-                <div class="flex items-center gap-4 p-3 rounded-2xl glass mb-1">
-                    <div class="w-12 h-12 rounded-full shimmer flex-shrink-0"></div>
-                    <div class="flex-1 w-full">
+        <!-- Chats -->
+        <section class="py-4">
+
+            <div class="flex justify-between items-center mb-3">
+
+                <h2 class="text-sm font-semibold text-gray-200">
+                    Recent Chats
+                </h2>
+
+                <button
+                    type="button"
+                    onclick="loadChats()"
+                    aria-label="Refresh chats"
+                    class="text-blue-400 text-sm">
+
+                    <i class="ph ph-arrows-clockwise text-lg"></i>
+
+                </button>
+
+            </div>
+
+            <div
+                id="chats-container"
+                class="flex flex-col gap-2"
+                aria-live="polite">
+
+                <div class="flex items-center gap-4 p-3 rounded-2xl glass">
+
+                    <div class="w-12 h-12 rounded-full shimmer"></div>
+
+                    <div class="flex-1">
                         <div class="w-24 h-4 rounded shimmer mb-2"></div>
                         <div class="w-40 h-3 rounded shimmer"></div>
                     </div>
-                    <div class="w-8 h-8 rounded shimmer"></div>
+
                 </div>
-                <div class="flex items-center gap-4 p-3 rounded-2xl glass mb-1">
-                    <div class="w-12 h-12 rounded-full shimmer flex-shrink-0"></div>
-                    <div class="flex-1 w-full">
-                        <div class="w-32 h-4 rounded shimmer mb-2"></div>
-                        <div class="w-3/4 h-3 rounded shimmer"></div>
-                    </div>
-                    <div class="w-8 h-8 rounded shimmer"></div>
-                </div>
+
             </div>
+
         </section>
-        
+
     </main>
 
-    <!-- Bottom Navigation Bar -->
-    <nav class="fixed bottom-0 w-full glass-nav pb-safe z-40">
-        <div class="max-w-3xl mx-auto flex justify-between items-center px-6 py-3">
-            <button onclick="navigate('home.html')" class="flex flex-col items-center gap-1 text-blue-500 w-16">
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 w-full glass-nav z-40">
+
+        <div class="max-w-3xl mx-auto flex justify-between items-center px-4 py-3">
+
+            <button onclick="navigate('home.html')"
+                class="flex flex-col items-center gap-1 text-blue-500 w-16">
+
                 <i class="ph-fill ph-house text-2xl"></i>
                 <span class="text-[10px] font-semibold">Home</span>
+
             </button>
-            <button onclick="navigate('chat.html')" class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-200 transition-colors w-16">
+
+            <button onclick="navigate('chat.html')"
+                class="flex flex-col items-center gap-1 text-gray-400 w-16">
+
                 <i class="ph ph-chat-circle-dots text-2xl"></i>
-                <span class="text-[10px] font-medium">Chats</span>
+                <span class="text-[10px]">Chats</span>
+
             </button>
-            <button onclick="navigate('groups.html')" class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-200 transition-colors w-16">
+
+            <button onclick="navigate('groups.html')"
+                class="flex flex-col items-center gap-1 text-gray-400 w-16">
+
                 <i class="ph ph-users text-2xl"></i>
-                <span class="text-[10px] font-medium">Groups</span>
+                <span class="text-[10px]">Groups</span>
+
             </button>
-            <button onclick="navigate('calls.html')" class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-200 transition-colors w-16">
+
+            <button onclick="navigate('calls.html')"
+                class="flex flex-col items-center gap-1 text-gray-400 w-16">
+
                 <i class="ph ph-phone text-2xl"></i>
-                <span class="text-[10px] font-medium">Calls</span>
+                <span class="text-[10px]">Calls</span>
+
             </button>
-            <button onclick="navigate('profile.html')" class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-200 transition-colors w-16">
+
+            <button onclick="navigate('profile.html')"
+                class="flex flex-col items-center gap-1 text-gray-400 w-16">
+
                 <i class="ph ph-user-circle text-2xl"></i>
-                <span class="text-[10px] font-medium">Profile</span>
+                <span class="text-[10px]">Profile</span>
+
             </button>
+
         </div>
+
     </nav>
 
-    <!-- Firebase & App Logic -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, query, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <!-- APPLICATION LOGIC -->
+    <script>
 
-        // Environment Variables
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'unichat-default-id';
-        const initToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+    "use strict";
 
-        // Init Firebase
-        let app, auth, db;
-        try {
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-        } catch (error) {
-            console.error("Firebase init error:", error);
-            showToast("System error: Unable to connect.", "error");
+    // ======================================
+    // CONFIGURATION
+    // ======================================
+
+    const API_URL = "http://127.0.0.1:5000";
+
+    const ENDPOINTS = {
+        me: "/api/me",
+        chats: "/api/chats",
+        csrf: "/api/csrf",
+        logout: "/logout"
+    };
+
+    let csrfToken = null;
+    let currentChats = [];
+    let activeFilter = "all";
+    let logoutInProgress = false;
+
+    // ======================================
+    // SAFE API REQUEST
+    // ======================================
+
+    async function apiRequest(path, options = {}) {
+
+        const headers = new Headers(options.headers || {});
+
+        if (csrfToken && options.method && options.method !== "GET") {
+            headers.set("X-CSRF-Token", csrfToken);
         }
 
-        // Global UI Functions
-        window.navigate = (page) => {
-            // For demo purposes, if it's home, do nothing. Otherwise show a toast.
-            if(page === 'home.html') return;
-            showToast(`Navigating to ${page}...`);
-            // In a real multi-page setup: window.location.href = page;
-        };
+        const response = await fetch(API_URL + path, {
+            ...options,
+            headers,
+            credentials: "include",
+            cache: "no-store",
+            redirect: "error"
+        });
 
-        window.showToast = (message, type = 'success') => {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            const bgColor = type === 'success' ? 'bg-blue-500/90 border-blue-400/50' : 'bg-red-500/90 border-red-400/50';
-            
-            toast.className = `toast flex items-center px-4 py-2.5 rounded-full border shadow-xl backdrop-blur-md text-white text-sm font-medium ${bgColor}`;
-            toast.innerHTML = `<span class="truncate">${message}</span>`;
-            
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(-10px)';
-                toast.style.transition = 'all 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 2500);
-        };
+        if (response.status === 401 || response.status === 403) {
+            throw new Error("AUTH_REQUIRED");
+        }
 
-        window.showMenu = () => {
-            showToast("Settings menu opened");
-        };
+        const contentType = response.headers.get("content-type") || "";
 
-        // UI Render Functions
-        const renderProfile = (data) => {
-            document.getElementById('profile-name').innerText = data?.fullName || 'Student';
-            document.getElementById('profile-username').innerText = data?.username ? `@${data.username}` : '@user';
-            
-            const photoEl = document.getElementById('profile-photo');
-            const shimmerEl = document.getElementById('profile-photo-shimmer');
-            
-            if (data?.photoURL) {
-                photoEl.src = data.photoURL;
-                photoEl.onload = () => {
-                    shimmerEl.classList.add('hidden');
-                    photoEl.classList.remove('hidden');
-                };
-            } else {
-                // Default avatar
-                photoEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(data?.fullName || 'U')}&background=3b82f6&color=fff`;
-                shimmerEl.classList.add('hidden');
-                photoEl.classList.remove('hidden');
+        if (!contentType.includes("application/json")) {
+            throw new Error("Invalid server response.");
+        }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || "Server request failed.");
+        }
+
+        return data;
+    }
+
+    // ======================================
+    // TOAST
+    // ======================================
+
+    window.showToast = function(message, type = "success") {
+
+        const container = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+
+        const success = type === "success";
+
+        toast.className =
+            "toast px-5 py-3 rounded-xl shadow-xl border text-sm text-white " +
+            (success
+                ? "bg-blue-600 border-blue-400"
+                : "bg-red-600 border-red-400");
+
+        // Never insert server text as HTML.
+        toast.textContent = String(message);
+
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+
+    };
+
+    // ======================================
+    // NAVIGATION
+    // ======================================
+
+    window.navigate = function(page) {
+
+        const allowedPages = [
+            "home.html",
+            "search.html",
+            "notifications.html",
+            "profile.html",
+            "chat.html",
+            "groups.html",
+            "calls.html"
+        ];
+
+        const pageName = page.split("?")[0];
+
+        if (!allowedPages.includes(pageName)) {
+            showToast("Invalid page.", "error");
+            return;
+        }
+
+        // Query values are not trusted as HTML.
+        window.location.assign(page);
+
+    };
+
+    // ======================================
+    // MENU
+    // ======================================
+
+    window.showMenu = function() {
+
+        const panel = document.getElementById("menu-panel");
+        const button = document.getElementById("menu-button");
+
+        panel.classList.toggle("hidden-view");
+
+        button.setAttribute(
+            "aria-expanded",
+            String(!panel.classList.contains("hidden-view"))
+        );
+
+    };
+
+    document.addEventListener("click", function(e) {
+
+        const panel = document.getElementById("menu-panel");
+        const button = document.getElementById("menu-button");
+
+        if (!panel.contains(e.target) && !button.contains(e.target)) {
+
+            panel.classList.add("hidden-view");
+            button.setAttribute("aria-expanded", "false");
+
+        }
+
+    });
+
+    // ======================================
+    // SAFE IMAGE URL
+    // ======================================
+
+    function safeImageURL(value, name) {
+
+        const fallback = "https://ui-avatars.com/api/?name=" +
+            encodeURIComponent(name || "Student") +
+            "&background=3b82f6&color=fff";
+
+        if (!value || typeof value !== "string") {
+            return fallback;
+        }
+
+        try {
+
+            const url = new URL(value, window.location.origin);
+
+            if (
+                url.protocol !== "https:" &&
+                url.origin !== window.location.origin
+            ) {
+                return fallback;
             }
+
+            return url.href;
+
+        } catch {
+            return fallback;
+        }
+
+    }
+
+    // ======================================
+    // PROFILE RENDER
+    // ======================================
+
+    function renderProfile(user) {
+
+        const name = user.fullName || user.name || "Student";
+
+        document.getElementById("profile-name").textContent = name;
+
+        document.getElementById("profile-username").textContent =
+            user.username ? "@" + user.username : "@user";
+
+        const photo = document.getElementById("profile-photo");
+        const shimmer = document.getElementById("profile-photo-shimmer");
+
+        photo.onload = () => {
+            shimmer.classList.add("hidden");
+            photo.classList.remove("hidden");
         };
 
-        const renderChats = (chats) => {
-            const container = document.getElementById('chats-container');
-            container.innerHTML = ''; // Clear skeletons
+        photo.onerror = () => {
+            photo.src = "https://ui-avatars.com/api/?name=Student&background=3b82f6&color=fff";
+        };
 
-            if (!chats || chats.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-10 px-4 glass rounded-2xl">
-                        <i class="ph ph-chat-circle-slash text-4xl text-gray-500 mb-2"></i>
-                        <h3 class="text-gray-300 font-medium">No recent chats</h3>
-                        <p class="text-gray-500 text-xs mt-1">Start a new conversation to connect!</p>
-                        <button onclick="navigate('chat.html')" class="mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm rounded-full transition-colors">New Chat</button>
-                    </div>
-                `;
+        photo.src = safeImageURL(user.photoURL || user.photo_url, name);
+
+    }
+
+    // ======================================
+    // SAFE CHAT IMAGE
+    // ======================================
+
+    function createAvatar(src, name) {
+
+        const img = document.createElement("img");
+
+        img.className =
+            "w-12 h-12 rounded-full object-cover border border-white/10";
+
+        img.alt = name + " profile";
+
+        img.loading = "lazy";
+
+        img.referrerPolicy = "no-referrer";
+
+        img.src = safeImageURL(src, name);
+
+        return img;
+
+    }
+
+    // ======================================
+    // CHAT RENDERING
+    // ======================================
+
+    function renderChats(chats) {
+
+        const container = document.getElementById("chats-container");
+
+        container.replaceChildren();
+
+        if (!Array.isArray(chats)) {
+            showEmptyState("Invalid chat data.");
+            return;
+        }
+
+        if (chats.length === 0) {
+            showEmptyState("No recent chats. Start a conversation!");
+            return;
+        }
+
+        chats.forEach(chat => {
+
+            if (!chat || typeof chat !== "object") return;
+
+            const id = String(chat.id || "");
+
+            // Prevent unsafe navigation IDs.
+            if (!/^[a-zA-Z0-9_-]{1,100}$/.test(id)) return;
+
+            const name = String(chat.name || "Unknown User");
+
+            const lastMessage = String(chat.lastMessage || "No messages yet");
+
+            const unread = Math.max(
+                0,
+                Math.min(9999, Number(chat.unreadCount) || 0)
+            );
+
+            const row = document.createElement("button");
+
+            row.type = "button";
+
+            row.className =
+                "w-full flex items-center gap-3 p-3 sm:p-4 rounded-2xl glass hover:bg-white/10 transition-colors text-left";
+
+            row.addEventListener("click", () => {
+                window.location.assign(
+                    "chat.html?id=" + encodeURIComponent(id)
+                );
+            });
+
+            const avatarWrapper = document.createElement("div");
+            avatarWrapper.className = "relative flex-shrink-0";
+
+            avatarWrapper.appendChild(
+                createAvatar(chat.photo || chat.photoURL, name)
+            );
+
+            if (chat.isOnline === true) {
+
+                const online = document.createElement("span");
+
+                online.className =
+                    "absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-slate-800 rounded-full";
+
+                avatarWrapper.appendChild(online);
+
+            }
+
+            const content = document.createElement("div");
+
+            content.className = "flex-1 min-w-0";
+
+            const top = document.createElement("div");
+
+            top.className =
+                "flex justify-between items-center gap-2 mb-1";
+
+            const title = document.createElement("h3");
+
+            title.className =
+                "text-sm font-semibold text-gray-100 truncate";
+
+            title.textContent = name;
+
+            const time = document.createElement("span");
+
+            time.className =
+                "text-[10px] text-gray-500 flex-shrink-0";
+
+            const timestamp = new Date(chat.timestamp);
+
+            if (!Number.isNaN(timestamp.getTime())) {
+                time.textContent = timestamp.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                });
+            }
+
+            top.append(title, time);
+
+            const bottom = document.createElement("div");
+
+            bottom.className =
+                "flex justify-between items-center gap-2";
+
+            const message = document.createElement("p");
+
+            message.className =
+                "text-xs text-gray-400 truncate";
+
+            message.textContent = lastMessage;
+
+            bottom.appendChild(message);
+
+            if (unread > 0) {
+
+                const badge = document.createElement("span");
+
+                badge.className =
+                    "bg-blue-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0";
+
+                badge.textContent = String(unread);
+
+                bottom.appendChild(badge);
+
+            }
+
+            content.append(top, bottom);
+
+            row.append(avatarWrapper, content);
+
+            row.dataset.type = chat.type === "group" ? "group" : "personal";
+
+            row.dataset.favourite = String(chat.isFavourite === true);
+
+            container.appendChild(row);
+
+        });
+
+        applyFilter();
+
+        if (!container.children.length) {
+            showEmptyState("No chats available.");
+        }
+
+    }
+
+    // ======================================
+    // EMPTY STATE
+    // ======================================
+
+    function showEmptyState(message) {
+
+        const container = document.getElementById("chats-container");
+
+        container.replaceChildren();
+
+        const box = document.createElement("div");
+
+        box.className =
+            "text-center py-10 px-4 glass rounded-2xl";
+
+        const icon = document.createElement("i");
+
+        icon.className =
+            "ph ph-chat-circle-slash text-4xl text-gray-500";
+
+        const title = document.createElement("h3");
+
+        title.className = "text-gray-300 font-medium mt-2";
+
+        title.textContent = message;
+
+        const button = document.createElement("button");
+
+        button.type = "button";
+
+        button.className =
+            "mt-4 px-6 py-2 bg-blue-600 text-white text-sm rounded-full";
+
+        button.textContent = "New Chat";
+
+        button.addEventListener("click", () => {
+            navigate("chat.html");
+        });
+
+        box.append(icon, title, button);
+
+        container.appendChild(box);
+
+    }
+
+    // ======================================
+    // CHAT FILTER
+    // ======================================
+
+    function applyFilter() {
+
+        document.querySelectorAll("#chats-container > button").forEach(row => {
+
+            const type = row.dataset.type;
+            const favourite = row.dataset.favourite === "true";
+
+            let visible = true;
+
+            if (activeFilter === "personal") {
+                visible = type === "personal";
+            }
+
+            if (activeFilter === "group") {
+                visible = type === "group";
+            }
+
+            if (activeFilter === "favourite") {
+                visible = favourite;
+            }
+
+            row.classList.toggle("hidden", !visible);
+
+        });
+
+    }
+
+    document.querySelectorAll(".category-btn").forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            activeFilter = button.dataset.filter;
+
+            document.querySelectorAll(".category-btn").forEach(btn => {
+
+                btn.classList.remove("bg-blue-600", "text-white");
+
+                btn.classList.add("glass", "text-gray-300");
+
+            });
+
+            button.classList.add("bg-blue-600", "text-white");
+
+            button.classList.remove("glass", "text-gray-300");
+
+            applyFilter();
+
+        });
+
+    });
+
+    // ======================================
+    // LOAD CHATS
+    // ======================================
+
+    window.loadChats = async function() {
+
+        const container = document.getElementById("chats-container");
+
+        try {
+
+            const result = await apiRequest(ENDPOINTS.chats);
+
+            if (!result.success) {
+                throw new Error(result.message || "Unable to load chats.");
+            }
+
+            currentChats = Array.isArray(result.chats)
+                ? result.chats
+                : [];
+
+            renderChats(currentChats);
+
+            const unreadExists = currentChats.some(
+                chat => Number(chat.unreadCount) > 0
+            );
+
+            document.getElementById("notif-badge")
+                .classList.toggle("hidden", !unreadExists);
+
+        } catch(error) {
+
+            if (error.message === "AUTH_REQUIRED") {
+                redirectToLogin();
                 return;
             }
 
-            chats.forEach(chat => {
-                const isUnread = chat.unreadCount > 0;
-                const timeStr = new Date(chat.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                
-                const html = `
-                    <div onclick="navigate('chat.html?id=${chat.id}')" class="flex items-center gap-3 p-3 sm:p-4 rounded-2xl glass hover:bg-white/10 transition-colors cursor-pointer group">
-                        <div class="relative">
-                            <img src="${chat.photo}" alt="${chat.name}" class="w-12 h-12 rounded-full object-cover border border-white/10">
-                            ${chat.isOnline ? `<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-[#1e293b] rounded-full"></div>` : ''}
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex justify-between items-baseline mb-0.5">
-                                <h3 class="text-sm font-semibold text-gray-100 truncate pr-2 group-hover:text-blue-400 transition-colors">${chat.name}</h3>
-                                <span class="text-[10px] ${isUnread ? 'text-blue-400 font-bold' : 'text-gray-500'} flex-shrink-0">${timeStr}</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <p class="text-xs ${isUnread ? 'text-gray-200 font-medium' : 'text-gray-400'} truncate pr-4">${chat.lastMessage}</p>
-                                ${isUnread ? `<span class="bg-blue-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">${chat.unreadCount}</span>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                `;
-                container.insertAdjacentHTML('beforeend', html);
+            console.error("Chat loading error:", error);
+
+            container.replaceChildren();
+
+            showEmptyState("Unable to load chats. Please refresh.");
+
+        }
+
+    };
+
+    // ======================================
+    // AUTHENTICATION CHECK
+    // ======================================
+
+    async function checkAuthentication() {
+
+        try {
+
+            const result = await apiRequest(ENDPOINTS.me);
+
+            if (!result.success || !result.user) {
+                redirectToLogin();
+                return;
+            }
+
+            renderProfile(result.user);
+
+            await loadChats();
+
+        } catch(error) {
+
+            console.error("Authentication error:", error);
+
+            redirectToLogin();
+
+        }
+
+    }
+
+    // ======================================
+    // CSRF TOKEN
+    // ======================================
+
+    async function loadCSRFToken() {
+
+        const result = await apiRequest(ENDPOINTS.csrf);
+
+        if (!result.csrfToken || typeof result.csrfToken !== "string") {
+            throw new Error("CSRF token unavailable.");
+        }
+
+        csrfToken = result.csrfToken;
+
+    }
+
+    // ======================================
+    // LOGOUT
+    // ======================================
+
+    window.logout = async function() {
+
+        if (logoutInProgress) return;
+
+        const confirmed = window.confirm("Are you sure you want to logout?");
+
+        if (!confirmed) return;
+
+        logoutInProgress = true;
+
+        const button = document.getElementById("logout-menu-button");
+
+        button.disabled = true;
+
+        try {
+
+            if (!csrfToken) {
+                await loadCSRFToken();
+            }
+
+            const result = await apiRequest(ENDPOINTS.logout, {
+                method: "POST"
             });
-        };
 
-        // Data Fetching Logic (Rule 3: Auth Before Queries)
-        const loadUserData = async (user) => {
-            try {
-                // Rule 1: Strict paths for profile
-                const profileRef = doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'data');
-                const profileSnap = await getDoc(profileRef);
-                
-                let userData = null;
-                if (profileSnap.exists()) {
-                    userData = profileSnap.data();
-                } else {
-                    // Fallback for demo if no complete registration occurred
-                    userData = { fullName: "Guest User", username: "guest" };
-                }
-                renderProfile(userData);
-
-                // For the purpose of UI demonstration, we will generate rich mock chat data 
-                // because a new Firebase project won't have other users/chats to display.
-                // In a production app, we would query: collection(db, 'artifacts', appId, 'users', user.uid, 'chats')
-                
-                setTimeout(() => {
-                    const mockChats = [
-                        { id: '1', name: 'Computer Science Dept.', lastMessage: 'Prof. Davis: Don\'t forget the assignment!', timestamp: new Date(Date.now() - 1000*60*5).toISOString(), photo: 'https://ui-avatars.com/api/?name=CS&background=0f172a&color=3b82f6', unreadCount: 3, isOnline: true },
-                        { id: '2', name: 'Aisha Sharma', lastMessage: 'Are we still meeting at the library?', timestamp: new Date(Date.now() - 1000*60*30).toISOString(), photo: 'https://ui-avatars.com/api/?name=Aisha&background=ec4899&color=fff', unreadCount: 1, isOnline: true },
-                        { id: '3', name: 'Project Group Beta', lastMessage: 'Rahul uploaded a new file.', timestamp: new Date(Date.now() - 1000*60*120).toISOString(), photo: 'https://ui-avatars.com/api/?name=PB&background=8b5cf6&color=fff', unreadCount: 0, isOnline: false },
-                        { id: '4', name: 'David Miller', lastMessage: 'Thanks man! See ya tomorrow.', timestamp: new Date(Date.now() - 1000*60*60*24).toISOString(), photo: 'https://ui-avatars.com/api/?name=David&background=10b981&color=fff', unreadCount: 0, isOnline: false },
-                        { id: '5', name: 'Hostel Block C', lastMessage: 'Admin: Water supply will be cut at 5PM.', timestamp: new Date(Date.now() - 1000*60*60*48).toISOString(), photo: 'https://ui-avatars.com/api/?name=HC&background=f59e0b&color=fff', unreadCount: 0, isOnline: false },
-                    ];
-                    renderChats(mockChats);
-                    
-                    // Simulate notifications
-                    document.getElementById('notif-badge').classList.remove('hidden');
-                }, 800); // Slight delay for realistic loading feel
-
-            } catch (error) {
-                console.error("Error loading user data:", error);
-                showToast("Error syncing data.", "error");
+            if (!result.success) {
+                throw new Error(result.message || "Logout failed.");
             }
-        };
 
-        // Initialization Pipeline
-        const init = async () => {
-            try {
-                if (initToken) {
-                    await signInWithCustomToken(auth, initToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
+            // Remove current page from browser history.
+            redirectToLogin();
 
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        loadUserData(user);
-                    } else {
-                        // User logged out or auth failed
-                        window.location.href = 'index.html';
-                    }
-                });
-            } catch (err) {
-                console.error("Auth Init Error:", err);
-                window.location.href = 'index.html'; // Redirect to login on fatal error
+        } catch(error) {
+
+            console.error("Logout error:", error);
+
+            if (error.message === "AUTH_REQUIRED") {
+                redirectToLogin();
+                return;
             }
-        };
 
-        // Start App
-        init();
+            showToast("Unable to logout. Please try again.", "error");
+
+            logoutInProgress = false;
+            button.disabled = false;
+
+        }
+
+    };
+
+    // ======================================
+    // REDIRECT TO LOGIN
+    // ======================================
+
+    function redirectToLogin() {
+
+        window.location.replace("login.html");
+
+    }
+
+    // ======================================
+    // START APPLICATION
+    // ======================================
+
+    async function init() {
+
+        try {
+
+            await loadCSRFToken();
+
+            await checkAuthentication();
+
+        } catch(error) {
+
+            console.error("Application initialization error:", error);
+
+            redirectToLogin();
+
+        }
+
+    }
+
+    // Start
+    init();
 
     </script>
+
 </body>
 </html>
