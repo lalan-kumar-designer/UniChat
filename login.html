@@ -1,22 +1,26 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniChat - Student Messaging</title>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
+                        sans: ['Poppins', 'sans-serif']
                     },
                     colors: {
                         unichat: {
@@ -28,17 +32,25 @@
                     }
                 }
             }
-        }
+        };
     </script>
-    
+
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #020617 0%, #1e1b4b 50%, #0f172a 100%);
+            background: linear-gradient(
+                135deg,
+                #020617 0%,
+                #1e1b4b 50%,
+                #0f172a 100%
+            );
             min-height: 100vh;
         }
 
-        /* Glassmorphism Classes */
         .glass-card {
             background: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(16px);
@@ -65,53 +77,73 @@
             color: rgba(255, 255, 255, 0.4);
         }
 
-        /* Custom Scrollbar for Register Form */
+        .glass-input option {
+            background: #1e293b;
+            color: white;
+        }
+
         ::-webkit-scrollbar {
             width: 6px;
         }
+
         ::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.02);
         }
+
         ::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, 0.15);
             border-radius: 10px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.25);
-        }
 
-        /* View Transitions */
         .view-hidden {
             display: none !important;
         }
-        
+
         .fade-in {
             animation: fadeIn 0.4s ease-out forwards;
         }
-        
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* Toast Animation */
         .toast-enter {
-            animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation: slideInRight 0.3s ease forwards;
         }
+
         .toast-exit {
-            animation: slideOutRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation: slideOutRight 0.3s ease forwards;
         }
 
         @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes slideOutRight {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
-        /* Loading Spinner */
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
         .spinner {
             border: 3px solid rgba(255,255,255,0.3);
             border-radius: 50%;
@@ -121,462 +153,978 @@
             animation: spin 1s linear infinite;
             display: none;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        .btn-loading .spinner { display: inline-block; }
-        .btn-loading .btn-text { display: none; }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-loading .spinner {
+            display: inline-block;
+        }
+
+        .btn-loading .btn-text {
+            display: none;
+        }
     </style>
 </head>
+
 <body class="flex items-center justify-center p-4 sm:p-6 text-gray-100 relative overflow-x-hidden">
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3"></div>
+    <!-- Toast Container -->
+    <div id="toast-container"
+         class="fixed top-5 right-5 z-50 flex flex-col gap-3">
+    </div>
 
     <!-- Main Container -->
     <div class="glass-card w-full max-w-md md:max-w-4xl rounded-3xl overflow-hidden relative">
-        
-        <!-- ================= LOGIN SECTION ================= -->
-        <div id="login-section" class="p-8 sm:p-12 md:max-w-md mx-auto w-full fade-in">
+
+        <!-- LOGIN SECTION -->
+        <div id="login-section"
+             class="p-8 sm:p-12 md:max-w-md mx-auto w-full fade-in">
+
             <div class="text-center mb-10">
+
                 <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 mb-4 shadow-lg shadow-blue-500/30">
                     <i class="ph ph-chats-teardrop text-3xl text-white"></i>
                 </div>
-                <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">UniChat</h1>
-                <p class="text-gray-400 mt-2 text-sm">Connect with your campus community</p>
+
+                <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+                    UniChat
+                </h1>
+
+                <p class="text-gray-400 mt-2 text-sm">
+                    Connect with your campus community
+                </p>
+
             </div>
 
             <form id="login-form" class="space-y-5">
-                <!-- Mobile Number -->
+
+                <!-- Mobile -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1.5 ml-1">Mobile Number</label>
+                    <label class="block text-sm font-medium text-gray-300 mb-1.5 ml-1">
+                        Mobile Number
+                    </label>
+
                     <div class="flex">
                         <span class="inline-flex items-center px-4 rounded-l-xl glass-input border-r-0 text-gray-400 font-medium">
                             +91
                         </span>
-                        <input type="tel" id="login-mobile" required pattern="[0-9]{10}" placeholder="Enter 10 digit number" 
-                               class="flex-1 w-full rounded-r-xl glass-input px-4 py-3 text-sm focus:ring-0">
+
+                        <input
+                            type="tel"
+                            id="login-mobile"
+                            required
+                            maxlength="10"
+                            inputmode="numeric"
+                            pattern="[0-9]{10}"
+                            placeholder="Enter 10 digit number"
+                            class="flex-1 w-full rounded-r-xl glass-input px-4 py-3 text-sm">
                     </div>
                 </div>
 
                 <!-- Password -->
                 <div>
+
                     <div class="flex justify-between items-center mb-1.5 ml-1 mr-1">
-                        <label class="block text-sm font-medium text-gray-300">Password</label>
-                        <a href="#" class="text-xs text-blue-400 hover:text-blue-300 transition-colors">Forgot Password?</a>
+
+                        <label class="block text-sm font-medium text-gray-300">
+                            Password
+                        </label>
+
+                        <a href="#"
+                           id="forgot-password"
+                           class="text-xs text-blue-400 hover:text-blue-300 transition-colors">
+                            Forgot Password?
+                        </a>
+
                     </div>
+
                     <div class="relative">
+
                         <i class="ph ph-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
-                        <input type="password" id="login-password" required placeholder="Enter your password" 
-                               class="w-full rounded-xl glass-input pl-11 pr-12 py-3 text-sm">
-                        <button type="button" onclick="togglePassword('login-password', 'login-eye-icon')" 
-                                class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors focus:outline-none">
+
+                        <input
+                            type="password"
+                            id="login-password"
+                            required
+                            placeholder="Enter your password"
+                            class="w-full rounded-xl glass-input pl-11 pr-12 py-3 text-sm">
+
+                        <button
+                            type="button"
+                            onclick="togglePassword('login-password','login-eye-icon')"
+                            class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
+
                             <i id="login-eye-icon" class="ph ph-eye text-lg"></i>
+
                         </button>
+
                     </div>
                 </div>
 
                 <!-- Login Button -->
-                <button type="submit" id="btn-login" 
-                        class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold rounded-xl py-3.5 transition-all transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-blue-900/50 flex justify-center items-center gap-2 mt-6">
+                <button
+                    type="submit"
+                    id="btn-login"
+                    class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold rounded-xl py-3.5 transition-all transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-blue-900/50 flex justify-center items-center gap-2 mt-6">
+
                     <span class="btn-text">Login to UniChat</span>
                     <div class="spinner"></div>
+
                 </button>
+
             </form>
 
             <!-- Divider -->
             <div class="flex items-center my-6">
+
                 <div class="flex-1 border-t border-white/10"></div>
-                <span class="px-4 text-xs text-gray-500 font-medium">OR</span>
+
+                <span class="px-4 text-xs text-gray-500 font-medium">
+                    OR
+                </span>
+
                 <div class="flex-1 border-t border-white/10"></div>
+
             </div>
 
             <!-- Google Login -->
-            <button id="btn-google" class="w-full glass-input hover:bg-white/5 text-white font-medium rounded-xl py-3.5 flex items-center justify-center gap-3 transition-all">
-                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5">
+            <button
+                type="button"
+                id="btn-google"
+                class="w-full glass-input hover:bg-white/5 text-white font-medium rounded-xl py-3.5 flex items-center justify-center gap-3 transition-all">
+
+                <img
+                    src="https://www.svgrepo.com/show/475656/google-color.svg"
+                    alt="Google"
+                    class="w-5 h-5">
+
                 Continue with Google
+
             </button>
 
             <!-- Register Link -->
             <p class="text-center mt-8 text-sm text-gray-400">
-                New to UniChat? 
-                <button onclick="switchView('register')" class="text-blue-400 font-semibold hover:text-blue-300 transition-colors ml-1 focus:outline-none">Create an account</button>
+
+                New to UniChat?
+
+                <button
+                    type="button"
+                    onclick="switchView('register')"
+                    class="text-blue-400 font-semibold hover:text-blue-300 ml-1">
+
+                    Create an account
+
+                </button>
+
             </p>
+
         </div>
 
-        <!-- ================= REGISTER SECTION ================= -->
-        <div id="register-section" class="p-6 sm:p-10 w-full view-hidden max-h-[90vh] overflow-y-auto fade-in">
+        <!-- REGISTER SECTION -->
+        <div id="register-section"
+             class="p-6 sm:p-10 w-full view-hidden max-h-[90vh] overflow-y-auto">
+
             <div class="flex items-center justify-between mb-8">
+
                 <div>
-                    <h2 class="text-2xl font-bold text-white">Create Account</h2>
-                    <p class="text-gray-400 text-sm mt-1">Join the ultimate student platform</p>
+                    <h2 class="text-2xl font-bold text-white">
+                        Create Account
+                    </h2>
+
+                    <p class="text-gray-400 text-sm mt-1">
+                        Join the ultimate student platform
+                    </p>
                 </div>
-                <button onclick="switchView('login')" class="p-2 rounded-full glass-input hover:bg-white/10 transition-colors focus:outline-none group">
-                    <i class="ph ph-x text-xl text-gray-400 group-hover:text-white"></i>
+
+                <button
+                    type="button"
+                    onclick="switchView('login')"
+                    class="p-2 rounded-full glass-input hover:bg-white/10">
+
+                    <i class="ph ph-x text-xl text-gray-400"></i>
+
                 </button>
+
             </div>
 
             <form id="register-form" class="space-y-6">
-                <!-- Profile Photo Upload -->
+
+                <!-- Profile Photo -->
                 <div class="flex flex-col items-center justify-center mb-6">
-                    <div class="relative group cursor-pointer" onclick="document.getElementById('reg-photo').click()">
-                        <div id="photo-preview" class="w-24 h-24 rounded-full glass-input flex items-center justify-center overflow-hidden border-2 border-dashed border-gray-500 group-hover:border-blue-400 transition-colors">
-                            <i class="ph ph-camera text-3xl text-gray-500 group-hover:text-blue-400" id="photo-icon"></i>
-                            <img id="photo-img" src="" alt="Profile" class="w-full h-full object-cover hidden">
+
+                    <div class="relative group cursor-pointer"
+                         onclick="document.getElementById('reg-photo').click()">
+
+                        <div id="photo-preview"
+                             class="w-24 h-24 rounded-full glass-input flex items-center justify-center overflow-hidden border-2 border-dashed border-gray-500">
+
+                            <i class="ph ph-camera text-3xl text-gray-500"
+                               id="photo-icon"></i>
+
+                            <img id="photo-img"
+                                 src=""
+                                 alt="Profile"
+                                 class="w-full h-full object-cover hidden">
+
                         </div>
+
                         <div class="absolute bottom-0 right-0 bg-blue-600 rounded-full p-1.5 shadow-lg border-2 border-[#0f172a]">
                             <i class="ph ph-plus text-white text-xs"></i>
                         </div>
+
                     </div>
-                    <p class="text-xs text-gray-400 mt-2">Upload Profile Photo</p>
-                    <input type="file" id="reg-photo" accept="image/*" class="hidden" onchange="previewImage(this)">
+
+                    <p class="text-xs text-gray-400 mt-2">
+                        Upload Profile Photo
+                    </p>
+
+                    <input
+                        type="file"
+                        id="reg-photo"
+                        accept="image/jpeg,image/png,image/webp"
+                        class="hidden"
+                        onchange="previewImage(this)">
+
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
                     <!-- Column 1 -->
                     <div class="space-y-5">
+
                         <div>
-                            <label class="block text-xs font-medium text-gray-400 mb-1 ml-1">Full Name *</label>
-                            <input type="text" id="reg-name" required class="w-full rounded-xl glass-input px-4 py-2.5 text-sm">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-xs font-medium text-gray-400 mb-1 ml-1">Username * (unique)</label>
-                            <div class="relative">
-                                <i class="ph ph-at absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
-                                <input type="text" id="reg-username" required pattern="^[a-z0-9_.]{3,20}$" placeholder="john_doe" 
-                                       title="3-20 characters, lowercase letters, numbers, dot, or underscore"
-                                       class="w-full rounded-xl glass-input pl-9 pr-4 py-2.5 text-sm lowercase">
-                            </div>
+                            <label class="block text-xs text-gray-400 mb-1">
+                                Full Name *
+                            </label>
+
+                            <input
+                                type="text"
+                                id="reg-name"
+                                required
+                                maxlength="100"
+                                class="w-full rounded-xl glass-input px-4 py-2.5 text-sm">
                         </div>
 
                         <div>
-                            <label class="block text-xs font-medium text-gray-400 mb-1 ml-1">Mobile Number *</label>
+                            <label class="block text-xs text-gray-400 mb-1">
+                                Username * (unique)
+                            </label>
+
+                            <input
+                                type="text"
+                                id="reg-username"
+                                required
+                                pattern="[a-z0-9_.]{3,20}"
+                                maxlength="20"
+                                placeholder="john_doe"
+                                class="w-full rounded-xl glass-input px-4 py-2.5 text-sm lowercase">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">
+                                Mobile Number *
+                            </label>
+
                             <div class="flex">
-                                <span class="inline-flex items-center px-3 rounded-l-xl glass-input border-r-0 text-gray-500 text-sm">+91</span>
-                                <input type="tel" id="reg-mobile" required pattern="[0-9]{10}" class="flex-1 w-full rounded-r-xl glass-input px-3 py-2.5 text-sm focus:ring-0">
+
+                                <span class="inline-flex items-center px-3 rounded-l-xl glass-input border-r-0 text-gray-500 text-sm">
+                                    +91
+                                </span>
+
+                                <input
+                                    type="tel"
+                                    id="reg-mobile"
+                                    required
+                                    maxlength="10"
+                                    inputmode="numeric"
+                                    pattern="[0-9]{10}"
+                                    class="flex-1 w-full rounded-r-xl glass-input px-3 py-2.5 text-sm">
+
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-medium text-gray-400 mb-1 ml-1">Email (Optional)</label>
-                            <input type="email" id="reg-email" class="w-full rounded-xl glass-input px-4 py-2.5 text-sm">
+                            <label class="block text-xs text-gray-400 mb-1">
+                                Email (Optional)
+                            </label>
+
+                            <input
+                                type="email"
+                                id="reg-email"
+                                class="w-full rounded-xl glass-input px-4 py-2.5 text-sm">
                         </div>
 
                         <div class="grid grid-cols-2 gap-3">
+
                             <div>
-                                <label class="block text-xs font-medium text-gray-400 mb-1 ml-1">Date of Birth *</label>
-                                <input type="date" id="reg-dob" required class="w-full rounded-xl glass-input px-3 py-2.5 text-sm [color-scheme:dark]">
+                                <label class="block text-xs text-gray-400 mb-1">
+                                    Date of Birth *
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="reg-dob"
+                                    required
+                                    class="w-full rounded-xl glass-input px-3 py-2.5 text-sm [color-scheme:dark]">
                             </div>
+
                             <div>
-                                <label class="block text-xs font-medium text-gray-400 mb-1 ml-1">Gender *</label>
-                                <select id="reg-gender" required class="w-full rounded-xl glass-input px-3 py-2.5 text-sm appearance-none">
+                                <label class="block text-xs text-gray-400 mb-1">
+                                    Gender *
+                                </label>
+
+                                <select
+                                    id="reg-gender"
+                                    required
+                                    class="w-full rounded-xl glass-input px-3 py-2.5 text-sm">
+
                                     <option value="" disabled selected>Select</option>
-                                    <option value="Male" class="bg-gray-800">Male</option>
-                                    <option value="Female" class="bg-gray-800">Female</option>
-                                    <option value="Other" class="bg-gray-800">Other</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+
                                 </select>
                             </div>
+
                         </div>
+
                     </div>
 
                     <!-- Column 2 -->
                     <div class="space-y-5">
+
                         <div class="grid grid-cols-2 gap-3">
+
                             <div>
-                                <label class="block text-xs font-medium text-gray-400 mb-1 ml-1">State *</label>
-                                <input type="text" id="reg-state" required class="w-full rounded-xl glass-input px-4 py-2.5 text-sm">
+                                <label class="block text-xs text-gray-400 mb-1">
+                                    State *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="reg-state"
+                                    required
+                                    class="w-full rounded-xl glass-input px-3 py-2.5 text-sm">
                             </div>
+
                             <div>
-                                <label class="block text-xs font-medium text-gray-400 mb-1 ml-1">District *</label>
-                                <input type="text" id="reg-district" required class="w-full rounded-xl glass-input px-4 py-2.5 text-sm">
+                                <label class="block text-xs text-gray-400 mb-1">
+                                    District *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="reg-district"
+                                    required
+                                    class="w-full rounded-xl glass-input px-3 py-2.5 text-sm">
                             </div>
+
                         </div>
 
                         <div>
-                            <label class="block text-xs font-medium text-gray-400 mb-1 ml-1">School / College Name *</label>
-                            <input type="text" id="reg-college" required class="w-full rounded-xl glass-input px-4 py-2.5 text-sm">
+                            <label class="block text-xs text-gray-400 mb-1">
+                                School / College Name *
+                            </label>
+
+                            <input
+                                type="text"
+                                id="reg-college"
+                                required
+                                class="w-full rounded-xl glass-input px-4 py-2.5 text-sm">
                         </div>
 
                         <div class="grid grid-cols-3 gap-3">
-                            <div class="col-span-1">
-                                <label class="block text-xs font-medium text-gray-400 mb-1 ml-1">Course *</label>
-                                <input type="text" id="reg-course" required placeholder="B.Tech, BA.." class="w-full rounded-xl glass-input px-3 py-2.5 text-sm">
+
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">
+                                    Course *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="reg-course"
+                                    required
+                                    placeholder="B.Tech"
+                                    class="w-full rounded-xl glass-input px-2 py-2.5 text-sm">
                             </div>
-                            <div class="col-span-1">
-                                <label class="block text-xs font-medium text-gray-400 mb-1 ml-1">Branch *</label>
-                                <input type="text" id="reg-branch" required placeholder="CSE, Arts.." class="w-full rounded-xl glass-input px-3 py-2.5 text-sm">
+
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">
+                                    Branch *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="reg-branch"
+                                    required
+                                    placeholder="CSE"
+                                    class="w-full rounded-xl glass-input px-2 py-2.5 text-sm">
                             </div>
-                            <div class="col-span-1">
-                                <label class="block text-xs font-medium text-gray-400 mb-1 ml-1">Sem/Class *</label>
-                                <input type="text" id="reg-sem" required placeholder="3rd, 12th.." class="w-full rounded-xl glass-input px-3 py-2.5 text-sm">
+
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">
+                                    Sem/Class *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="reg-sem"
+                                    required
+                                    placeholder="3rd"
+                                    class="w-full rounded-xl glass-input px-2 py-2.5 text-sm">
                             </div>
+
                         </div>
 
                         <div>
-                            <label class="block text-xs font-medium text-gray-400 mb-1 ml-1">Password *</label>
+                            <label class="block text-xs text-gray-400 mb-1">
+                                Password *
+                            </label>
+
                             <div class="relative">
-                                <input type="password" id="reg-password" required minlength="6" class="w-full rounded-xl glass-input px-4 py-2.5 text-sm pr-10">
-                                <button type="button" onclick="togglePassword('reg-password', 'reg-eye1')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+
+                                <input
+                                    type="password"
+                                    id="reg-password"
+                                    required
+                                    minlength="6"
+                                    class="w-full rounded-xl glass-input px-4 py-2.5 text-sm pr-10">
+
+                                <button
+                                    type="button"
+                                    onclick="togglePassword('reg-password','reg-eye1')"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+
                                     <i id="reg-eye1" class="ph ph-eye"></i>
+
                                 </button>
+
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-medium text-gray-400 mb-1 ml-1">Confirm Password *</label>
+                            <label class="block text-xs text-gray-400 mb-1">
+                                Confirm Password *
+                            </label>
+
                             <div class="relative">
-                                <input type="password" id="reg-confirm" required minlength="6" class="w-full rounded-xl glass-input px-4 py-2.5 text-sm pr-10">
-                                <button type="button" onclick="togglePassword('reg-confirm', 'reg-eye2')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+
+                                <input
+                                    type="password"
+                                    id="reg-confirm"
+                                    required
+                                    minlength="6"
+                                    class="w-full rounded-xl glass-input px-4 py-2.5 text-sm pr-10">
+
+                                <button
+                                    type="button"
+                                    onclick="togglePassword('reg-confirm','reg-eye2')"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+
                                     <i id="reg-eye2" class="ph ph-eye"></i>
+
                                 </button>
+
                             </div>
                         </div>
+
                     </div>
+
                 </div>
 
-                <!-- Full Width -->
+                <!-- Bio -->
                 <div>
-                    <label class="block text-xs font-medium text-gray-400 mb-1 ml-1">About Me (Bio)</label>
-                    <textarea id="reg-bio" rows="2" placeholder="Tell us a little about yourself..." class="w-full rounded-xl glass-input px-4 py-3 text-sm resize-none"></textarea>
+
+                    <label class="block text-xs text-gray-400 mb-1">
+                        About Me (Bio)
+                    </label>
+
+                    <textarea
+                        id="reg-bio"
+                        rows="2"
+                        maxlength="500"
+                        placeholder="Tell us a little about yourself..."
+                        class="w-full rounded-xl glass-input px-4 py-3 text-sm resize-none"></textarea>
+
                 </div>
 
+                <!-- Terms -->
                 <div class="flex items-start gap-3 mt-4">
-                    <input type="checkbox" id="reg-terms" required class="mt-1 w-4 h-4 rounded border-gray-600 bg-gray-800 text-blue-500 focus:ring-blue-500 focus:ring-offset-gray-900 cursor-pointer">
-                    <label for="reg-terms" class="text-xs text-gray-400 cursor-pointer">
-                        I accept the <a href="#" class="text-blue-400 hover:underline">Terms & Conditions</a> and <a href="#" class="text-blue-400 hover:underline">Privacy Policy</a> of UniChat.
+
+                    <input
+                        type="checkbox"
+                        id="reg-terms"
+                        required
+                        class="mt-1 w-4 h-4">
+
+                    <label for="reg-terms" class="text-xs text-gray-400">
+
+                        I accept the Terms & Conditions and Privacy Policy of UniChat.
+
                     </label>
+
                 </div>
 
                 <!-- Register Button -->
-                <button type="submit" id="btn-register" 
-                        class="w-full md:w-auto md:min-w-[200px] md:float-right bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold rounded-xl py-3 px-8 transition-all transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-blue-900/50 flex justify-center items-center gap-2">
+                <button
+                    type="submit"
+                    id="btn-register"
+                    class="w-full md:w-auto md:min-w-[200px] md:float-right bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl py-3 px-8 flex justify-center items-center gap-2">
+
                     <span class="btn-text">Create Account</span>
                     <div class="spinner"></div>
+
                 </button>
+
                 <div class="clear-both"></div>
+
             </form>
+
         </div>
+
     </div>
 
-       <script>
+    <!-- JAVASCRIPT -->
+    <script>
 
-const API_URL = "http://127.0.0.1:5000";
-        // --- UI Interactions ---
-        window.switchView = (view) => {
-            const login = document.getElementById('login-section');
-            const register = document.getElementById('register-section');
-            
-            if (view === 'register') {
-                login.classList.add('view-hidden');
-                register.classList.remove('view-hidden');
+        // =====================================
+        // CONFIGURATION
+        // =====================================
+
+        const API_URL = "http://127.0.0.1:5000";
+
+        // =====================================
+        // VIEW SWITCHING
+        // =====================================
+
+        window.switchView = function(view) {
+
+            const login = document.getElementById("login-section");
+            const register = document.getElementById("register-section");
+
+            if (view === "register") {
+
+                login.classList.add("view-hidden");
+                register.classList.remove("view-hidden");
+
             } else {
-                register.classList.add('view-hidden');
-                login.classList.remove('view-hidden');
+
+                register.classList.add("view-hidden");
+                login.classList.remove("view-hidden");
+
             }
+
         };
 
-        window.togglePassword = (inputId, iconId) => {
+        // =====================================
+        // PASSWORD VISIBILITY
+        // =====================================
+
+        window.togglePassword = function(inputId, iconId) {
+
             const input = document.getElementById(inputId);
             const icon = document.getElementById(iconId);
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.replace('ph-eye', 'ph-eye-slash');
+
+            if (input.type === "password") {
+
+                input.type = "text";
+                icon.classList.replace("ph-eye", "ph-eye-slash");
+
             } else {
-                input.type = 'password';
-                icon.classList.replace('ph-eye-slash', 'ph-eye');
+
+                input.type = "password";
+                icon.classList.replace("ph-eye-slash", "ph-eye");
+
             }
+
         };
 
-        window.previewImage = (input) => {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('photo-img').src = e.target.result;
-                    document.getElementById('photo-img').classList.remove('hidden');
-                    document.getElementById('photo-icon').classList.add('hidden');
-                    document.getElementById('photo-preview').classList.remove('border-dashed');
-                }
-                reader.readAsDataURL(input.files[0]);
+        // =====================================
+        // PROFILE IMAGE PREVIEW
+        // =====================================
+
+        window.previewImage = function(input) {
+
+            const file = input.files[0];
+
+            if (!file) return;
+
+            const allowedTypes = [
+                "image/jpeg",
+                "image/png",
+                "image/webp"
+            ];
+
+            if (!allowedTypes.includes(file.type)) {
+
+                showToast("Only JPG, PNG and WebP allowed.", "error");
+                input.value = "";
+                return;
+
             }
+
+            if (file.size > 2 * 1024 * 1024) {
+
+                showToast("Image must be below 2MB.", "error");
+                input.value = "";
+                return;
+
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+
+                document.getElementById("photo-img").src = e.target.result;
+
+                document.getElementById("photo-img").classList.remove("hidden");
+
+                document.getElementById("photo-icon").classList.add("hidden");
+
+                document.getElementById("photo-preview").classList.remove("border-dashed");
+
+            };
+
+            reader.readAsDataURL(file);
+
         };
 
-        // --- Toast System ---
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            const bgColor = type === 'success' ? 'bg-green-500/20 border-green-500/50 text-green-100' : 'bg-red-500/20 border-red-500/50 text-red-100';
-            const icon = type === 'success' ? 'ph-check-circle text-green-400' : 'ph-warning-circle text-red-400';
-            
-            toast.className = `toast-enter flex items-center gap-3 px-4 py-3 rounded-xl border backdrop-blur-md shadow-lg ${bgColor}`;
-            toast.innerHTML = `<i class="ph ${icon} text-xl"></i><p class="text-sm font-medium">${message}</p>`;
-            
+        // =====================================
+        // TOAST NOTIFICATION
+        // =====================================
+
+        function showToast(message, type = "success") {
+
+            const container = document.getElementById("toast-container");
+
+            const toast = document.createElement("div");
+
+            const isSuccess = type === "success";
+
+            const bgColor = isSuccess
+                ? "bg-green-500/20 border-green-500/50 text-green-100"
+                : "bg-red-500/20 border-red-500/50 text-red-100";
+
+            const icon = isSuccess
+                ? "ph-check-circle text-green-400"
+                : "ph-warning-circle text-red-400";
+
+            toast.className =
+                `toast-enter flex items-center gap-3 px-4 py-3 rounded-xl border backdrop-blur-md shadow-lg ${bgColor}`;
+
+            const iconElement = document.createElement("i");
+
+            iconElement.className = `ph ${icon} text-xl`;
+
+            const textElement = document.createElement("p");
+
+            textElement.className = "text-sm font-medium";
+
+            textElement.textContent = String(message || "Something went wrong.");
+
+            toast.append(iconElement, textElement);
+
             container.appendChild(toast);
-            
+
             setTimeout(() => {
-                toast.classList.replace('toast-enter', 'toast-exit');
+
+                toast.classList.replace("toast-enter", "toast-exit");
+
                 setTimeout(() => toast.remove(), 300);
+
             }, 3000);
+
         }
+
+        // =====================================
+        // LOADING STATE
+        // =====================================
 
         function setLoading(btnId, isLoading) {
+
             const btn = document.getElementById(btnId);
-            if (isLoading) {
-                btn.classList.add('btn-loading');
-                btn.disabled = true;
-            } else {
-                btn.classList.remove('btn-loading');
-                btn.disabled = false;
+
+            btn.classList.toggle("btn-loading", isLoading);
+
+            btn.disabled = isLoading;
+
+        }
+
+        // =====================================
+        // API RESPONSE HANDLER
+        // =====================================
+
+        async function readResponse(response) {
+
+            const contentType = response.headers.get("content-type") || "";
+
+            if (!contentType.includes("application/json")) {
+
+                throw new Error("Invalid server response.");
+
             }
+
+            const result = await response.json();
+
+            if (!response.ok) {
+
+                throw new Error(result.message || "Request failed.");
+
+            }
+
+            return result;
+
         }
-           // ================= REGISTER WITH FLASK =================
 
-document.getElementById("register-form").addEventListener("submit", async function (e) {
+        // =====================================
+        // REGISTER WITH FLASK
+        // =====================================
 
-    e.preventDefault();
+        document.getElementById("register-form")
+        .addEventListener("submit", async function(e) {
 
-    const password = document.getElementById("reg-password").value;
-    const confirm = document.getElementById("reg-confirm").value;
+            e.preventDefault();
 
-    if (password !== confirm) {
-        showToast("Passwords do not match!", "error");
-        return;
-    }
+            const password =
+                document.getElementById("reg-password").value;
 
-    setLoading("btn-register", true);
+            const confirm =
+                document.getElementById("reg-confirm").value;
 
-    const formData = new FormData();
+            if (password !== confirm) {
 
-    formData.append("name", document.getElementById("reg-name").value.trim());
-    formData.append("username", document.getElementById("reg-username").value.trim().toLowerCase());
-    formData.append("mobile", document.getElementById("reg-mobile").value.trim());
-    formData.append("email", document.getElementById("reg-email").value.trim());
-    formData.append("dob", document.getElementById("reg-dob").value);
-    formData.append("gender", document.getElementById("reg-gender").value);
-    formData.append("state", document.getElementById("reg-state").value.trim());
-    formData.append("district", document.getElementById("reg-district").value.trim());
-    formData.append("college", document.getElementById("reg-college").value.trim());
-    formData.append("course", document.getElementById("reg-course").value.trim());
-    formData.append("branch", document.getElementById("reg-branch").value.trim());
-    formData.append("semester", document.getElementById("reg-sem").value.trim());
-    formData.append("bio", document.getElementById("reg-bio").value.trim());
-    formData.append("password", password);
+                showToast("Passwords do not match!", "error");
+                return;
 
-    const photo = document.getElementById("reg-photo").files[0];
+            }
 
-    if (photo) {
-        formData.append("photo", photo);
-    }
+            const photo =
+                document.getElementById("reg-photo").files[0];
 
-    try {
+            if (photo && photo.size > 2 * 1024 * 1024) {
 
-        const response = await fetch("/register", {
+                showToast("Image must be below 2MB.", "error");
+                return;
 
-            method: "POST",
+            }
 
-            body: formData
+            setLoading("btn-register", true);
+
+            const formData = new FormData();
+
+            const fields = {
+
+                name: "reg-name",
+                username: "reg-username",
+                mobile: "reg-mobile",
+                email: "reg-email",
+                dob: "reg-dob",
+                gender: "reg-gender",
+                state: "reg-state",
+                district: "reg-district",
+                college: "reg-college",
+                course: "reg-course",
+                branch: "reg-branch",
+                semester: "reg-sem",
+                bio: "reg-bio"
+
+            };
+
+            Object.entries(fields).forEach(([key, id]) => {
+
+                let value = document.getElementById(id).value.trim();
+
+                if (key === "username") {
+                    value = value.toLowerCase();
+                }
+
+                formData.append(key, value);
+
+            });
+
+            formData.append("password", password);
+
+            if (photo) {
+
+                formData.append("photo", photo);
+
+            }
+
+            try {
+
+                const response = await fetch(
+                    API_URL + "/register",
+                    {
+                        method: "POST",
+                        body: formData,
+                        credentials: "include"
+                    }
+                );
+
+                const result = await readResponse(response);
+
+                if (result.success) {
+
+                    showToast(
+                        result.message || "Registration successful!",
+                        "success"
+                    );
+
+                    document.getElementById("register-form").reset();
+
+                    document.getElementById("photo-img").src = "";
+
+                    document.getElementById("photo-img").classList.add("hidden");
+
+                    document.getElementById("photo-icon").classList.remove("hidden");
+
+                    document.getElementById("photo-preview").classList.add("border-dashed");
+
+                    switchView("login");
+
+                } else {
+
+                    showToast(
+                        result.message || "Registration failed.",
+                        "error"
+                    );
+
+                }
+
+            } catch(error) {
+
+                console.error("Registration Error:", error);
+
+                showToast(error.message || "Unable to connect to server.", "error");
+
+            } finally {
+
+                setLoading("btn-register", false);
+
+            }
 
         });
 
-        const result = await response.json();
+        // =====================================
+        // LOGIN WITH FLASK
+        // =====================================
 
-        if (result.success) {
+        document.getElementById("login-form")
+        .addEventListener("submit", async function(e) {
 
-            showToast(result.message, "success");
+            e.preventDefault();
 
-            document.getElementById("register-form").reset();
+            setLoading("btn-login", true);
 
-            document.getElementById("photo-img").src = "";
-            document.getElementById("photo-img").classList.add("hidden");
+            const formData = new FormData();
 
-            document.getElementById("photo-icon").classList.remove("hidden");
+            formData.append(
+                "mobile",
+                document.getElementById("login-mobile").value.trim()
+            );
 
-            document.getElementById("photo-preview").classList.add("border-dashed");
+            formData.append(
+                "password",
+                document.getElementById("login-password").value
+            );
 
-            switchView("login");
+            try {
 
-        } else {
+                const response = await fetch(
+                    API_URL + "/login",
+                    {
+                        method: "POST",
+                        body: formData,
+                        credentials: "include"
+                    }
+                );
 
-            showToast(result.message, "error");
+                const result = await readResponse(response);
 
-        }
+                if (result.success) {
 
-    } catch (error) {
+                    showToast(
+                        result.message || "Login successful!",
+                        "success"
+                    );
 
-        console.error(error);
+                    const allowedPages = ["home.html"];
 
-        showToast("Server Error", "error");
+                    if (allowedPages.includes(result.redirect)) {
 
-    } finally {
+                        setTimeout(() => {
 
-        setLoading("btn-register", false);
+                            window.location.replace(result.redirect);
 
-    }
+                        }, 800);
 
-});
-           // ================= LOGIN WITH FLASK =================
+                    } else {
 
-document.getElementById("login-form").addEventListener("submit", async function (e) {
+                        showToast("Invalid redirect destination.", "error");
 
-    e.preventDefault();
+                    }
 
-    setLoading("btn-login", true);
+                } else {
 
-    const formData = new FormData();
+                    showToast(
+                        result.message || "Invalid mobile number or password.",
+                        "error"
+                    );
 
-    formData.append(
-        "mobile",
-        document.getElementById("login-mobile").value.trim()
-    );
+                }
 
-    formData.append(
-        "password",
-        document.getElementById("login-password").value
-    );
+            } catch(error) {
 
-    try {
+                console.error("Login Error:", error);
 
-        const response = await fetch(API_URL + "/login", {
+                showToast(
+                    error.message || "Unable to connect to server.",
+                    "error"
+                );
 
-            method: "POST",
+            } finally {
 
-            body: formData,
-            credentials: "include"
+                setLoading("btn-login", false);
+
+            }
 
         });
 
-        const result = await response.json();
+        // =====================================
+        // FORGOT PASSWORD
+        // =====================================
 
-        if (result.success) {
+        document.getElementById("forgot-password")
+        .addEventListener("click", function(e) {
 
-            showToast(result.message, "success");
+            e.preventDefault();
 
-            setTimeout(() => {
+            showToast(
+                "Password recovery is not configured yet.",
+                "error"
+            );
 
-                window.location.href = result.redirect;
+        });
 
-            }, 800);
+        // =====================================
+        // GOOGLE LOGIN
+        // =====================================
 
-        } else {
+        document.getElementById("btn-google")
+        .addEventListener("click", function() {
 
-            showToast(result.message, "error");
+            showToast(
+                "Google Login is not configured yet.",
+                "error"
+            );
 
-        }
+        });
 
-    } catch (error) {
-
-        console.error(error);
-
-        showToast("Unable to connect to server.", "error");
-
-    } finally {
-
-        setLoading("btn-login", false);
-
-    }
-
-});
-
-        
     </script>
+
 </body>
 </html>
